@@ -1,0 +1,160 @@
+\documentclass[12pt,a4paper]{article}
+\title{Report}
+\author{Konstantin Varbenov}
+
+\usepackage{graphicx}
+
+% Subcaptions
+\usepackage{subcaption}
+
+\usepackage[margin=25mm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{placeins}
+\usepackage{boxhandler}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+
+% Break long links
+\hypersetup{breaklinks=true}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{braket}
+\usepackage{datetime}
+\newdateformat{format}{{\THEDAY}  {\THEMONTH}, \THEYEAR}
+
+
+% SI Units
+\usepackage{siunitx}
+\usepackage{mdframed}
+
+% Highlighting for math
+% \usepackage{soul}
+% \usepackage{xcolor}
+% \newcommand{\mathhl}[2]{\colorbox{#1}{$\displaystyle #2$}}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat = newest}
+\usetikzlibrary{spy}
+
+\usepackage[british]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Headers and footers
+\pagestyle{fancy}
+\fancyhf{}
+%\rhead{\includegraphics[height=10mm]{Images/template.png}}
+\lhead{Analysis of data with Python}
+% Page name
+\rfoot{Page \thepage}
+
+%------------------------------------
+\begin{document}
+
+\large
+\section{FTP Test}
+Overall statistics from the fit file.
+
+\subsection{Statistics}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c}
+    Metric & Value \\ \hline
+    \input{tables.tex}
+    \end{tabular}
+    \end{table}
+
+\clearpage
+
+\subsection{Power}
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+        xmin = 0, xmax = 20,
+        ymin = 200, ymax = 400,
+        grid = both,
+        minor tick num = 1,
+        major grid style = {lightgray},
+        minor grid style = {lightgray!25},
+        width = 0.95\textwidth,
+        height = 0.65\textwidth,
+        legend cell align = {left},
+        legend pos = south east,
+        xlabel = {$t$, [min]},
+        ylabel = {$P$, [W]}
+        ]
+
+        \addplot[only marks,mark size = 1,blue,opacity=0.1,mark=*,] table [x = {x}, y = {y}, col sep=semicolon] {power_data.csv};
+        \addplot[smooth, blue, thick] table [x = {x}, y = {y}, col sep=semicolon] {power_smoothed_data.csv};
+
+        \legend{raw, smoothed}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Raw and smoohed power data}
+
+\end{figure}
+
+\clearpage
+\subsection{Heart rate}
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+        xmin = 0, xmax = 20,
+        ymin = 0, ymax = 210,
+        grid = both,
+        minor tick num = 1,
+        major grid style = {lightgray},
+        minor grid style = {lightgray!25},
+        width = 0.95\textwidth,
+        height = 0.65\textwidth,
+        legend cell align = {left},
+        legend pos = south east,
+        xlabel = {$t$, [min]},
+        ylabel = {bpm, [1/s]}
+        ]
+
+        \addplot[only marks,mark size = 1,red,opacity=0.1,mark=*,] table [x = {x}, y = {y}, col sep=semicolon] {heart_data.csv};
+        \addplot[smooth, red, thick] table [x = {x}, y = {y}, col sep=semicolon] {heart_smoothed_data.csv};
+
+        \legend{raw, smoothed}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Raw and smoohed heart rate data}
+
+\end{figure}
+
+\clearpage
+\subsection{Efficiency}
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+        xmin = 0, xmax = 20,
+        ymin = 0,
+        grid = both,
+        minor tick num = 1,
+        major grid style = {lightgray},
+        minor grid style = {lightgray!25},
+        width = 0.95\textwidth,
+        height = 0.65\textwidth,
+        legend cell align = {left},
+        legend pos = south east,
+        xlabel = {$t$, [min]},
+        ylabel = {bpm, [1/s]}
+        ]
+
+        \addplot[only marks,mark size = 1,green,opacity=0.1,mark=*,] table [x = {x}, y = {y}, col sep=semicolon] {eff_data.csv};
+        \addplot[smooth, green, thick] table [x = {x}, y = {y}, col sep=semicolon] {eff_smoothed_data.csv};
+
+        \legend{raw, smoothed}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Raw and smoohed efficiency data}
+
+\end{figure}
+
+\end{document}
