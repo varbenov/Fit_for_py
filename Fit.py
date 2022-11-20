@@ -18,12 +18,13 @@ def main():
     # path and file
     filename = 'd:\Rolle.fit'
     # output directory
-    os.chdir('d:')
+    os.chdir("d:\\Projects\\Python\\Fit_for_py")
     #----------------
 
     # Extract data from fit
     powers = []
     hrs = []
+    wb = []
     with fitdecode.FitReader(filename) as fit_file:
         for frame in fit_file:
             if isinstance(frame, fitdecode.records.FitDataMessage):
@@ -33,9 +34,21 @@ def main():
 
     # Extract start time
     starttime = detect_interval(powers, duration)
+
+    # Calculate W'bal
+    wb.append(wbal*1000)
+    for current_power in powers:
+        if current_power > ftp:
+            # expend
+            wb.append(wb[-1] + (ftp - current_power) )
+        else:
+            # replenish
+            wb.append(wb[-1] + (ftp - current_power)*(wbal*1000-wb[-1])/(wbal*1000))
+
     # Cut data
     powers=powers[starttime:starttime+duration]
     hrs=hrs[starttime:starttime+duration]
+    wb=wb[starttime:starttime+duration]
     effs=np.array(powers)/np.array(hrs)*60
 
     # Export data
@@ -45,18 +58,21 @@ def main():
     export_series_csv(moving_average(hrs, moving), moving, 'heart_smoothed_data')
     export_series_csv(effs, 0, 'eff_data')
     export_series_csv(moving_average(effs, moving), moving, 'eff_smoothed_data')
+    export_series_csv(wb, 0, 'wb_data')
 
     # Write tabular data for latex
     with open('tables.tex', 'w') as f:
         f.write('Average Power & \SI{' + str(np.round(np.average(powers),1)) + '}{W}' + str('\\\\')  )
         f.write('Standard deviation & \SI{' + str(np.round(np.std(powers),2)) + '}{W}' + str('\\\\') )
         f.write('Standard dev. (relative) & ' + str(np.round(np.std(powers)/np.average(powers)*100,2)) + ' \% ' + str('\\\\') )
-        f.write('W\'bal min. (const) & ' + str(np.round(wbal*1000-duration*(np.average(powers)-ftp),0)) + ' J ' + str('\\\\'))
+        f.write('W\'bal min. & ' + str(np.round(np.min(wb),0)) + ' J ' + str('\\\\'))
+        f.write('W\'bal min. (const) & ' + str(np.round(wbal*1000-duration*(np.average(powers)-ftp),0)) + ' J ' + str('\\\\ \hline '))
         f.write('Average HR & \SI{' + str(np.round(np.average(hrs),1)) + '}{1/min}' + str('\\\\') )
-        f.write('Average work per beat & \SI{' + str(np.round(np.average(powers)*60/np.average(hrs),1)) + '}{J}' + str('\\\\') + str('\\\\') )
+        f.write('Max HR & \SI{' + str(np.round(np.max(hrs),1)) + '}{1/min}' + str('\\\\') )
+        f.write('Average work per beat & \SI{' + str(np.round(np.average(powers)*60/np.average(hrs),1)) + '}{J}')
 
     # Compile pdf
-    os.system("pdflatex d:\main.tex")
+    os.system("pdflatex d:\\Projects\\Python\\Fit_for_py\\main.tex")
 
     # Remove all auxiliary data
     clean_up()

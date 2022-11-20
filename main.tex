@@ -55,7 +55,7 @@
 
 \large
 \section{FTP Test}
-Overall statistics from the fit file. Git.
+Overall statistics from the fit file.
 
 \subsection{Statistics}
 \begin{table}[h]
@@ -80,7 +80,7 @@ Overall statistics from the fit file. Git.
         major grid style = {lightgray},
         minor grid style = {lightgray!25},
         width = 0.95\textwidth,
-        height = 0.65\textwidth,
+        height = 0.45\textwidth,
         legend cell align = {left},
         legend pos = south east,
         xlabel = {$t$, [min]},
@@ -94,6 +94,32 @@ Overall statistics from the fit file. Git.
         \end{axis}
     \end{tikzpicture}
     \caption{Raw and smoohed power data}
+\end{figure}
+
+\begin{figure}[h!]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+            xmin = 0, xmax = 20,
+            ymin = 0, ymax = 30000,
+            grid = both,
+            minor tick num = 1,
+            major grid style = {lightgray},
+            minor grid style = {lightgray!25},
+            width = 0.95\textwidth,
+            height = 0.45\textwidth,
+            legend cell align = {left},
+            legend pos = south east,
+            xlabel = {$t$, [min]},
+            ylabel = {W'bal, [J]}
+            ]
+
+            \addplot[smooth, green, thick] table [x = {x}, y = {y}, col sep=semicolon] {wb_data.csv};
+
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Differential W'bal}
+
 
 \end{figure}
 
@@ -110,7 +136,7 @@ Overall statistics from the fit file. Git.
         major grid style = {lightgray},
         minor grid style = {lightgray!25},
         width = 0.95\textwidth,
-        height = 0.65\textwidth,
+        height = 0.45\textwidth,
         legend cell align = {left},
         legend pos = south east,
         xlabel = {$t$, [min]},
@@ -127,7 +153,7 @@ Overall statistics from the fit file. Git.
 
 \end{figure}
 
-\clearpage
+
 \subsection{Efficiency}
 \begin{figure}[h!]
     \centering
@@ -140,7 +166,7 @@ Overall statistics from the fit file. Git.
         major grid style = {lightgray},
         minor grid style = {lightgray!25},
         width = 0.95\textwidth,
-        height = 0.65\textwidth,
+        height = 0.45\textwidth,
         legend cell align = {left},
         legend pos = south east,
         xlabel = {$t$, [min]},
